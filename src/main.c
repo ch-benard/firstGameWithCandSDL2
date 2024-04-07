@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "tn2d/tn2d_graphics.h"
+#include "tn2d/tn2d_ttf.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,8 +17,8 @@ int main(int argc, char *argv[])
     int iSpeed = 1;
     int iYpos = iGameHeight - texFusee.height;
 
-    tn2d_font font = tn2d_graphics_new_font("assets/fonts/Bangers-Regular.ttf", 48);
-    tn2d_texture texText = tn2d_graphics_new_text(font, "Hey SpaceX, look how precise my landing is !", 0, 0, 255, 125);
+    tn2d_font font = tn2d_ttf_new_font("assets/fonts/Bangers-Regular.ttf", 48);
+    tn2d_texture texText = tn2d_ttf_new_text(font, "Hey SpaceX, look how precise my landing is !", 255, 255, 255, 125);
 
     // GAME LOOP
     while (true) {

@@ -5,7 +5,8 @@
 #include <stdbool.h>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
-#include "SDL2/SDL_ttf.h"
+
+extern SDL_Renderer *tn2d_sdl_renderer;
 
 // Init and close the graphics
 int tn2d_graphics_init(char *stitle, int iWidth, int iHeight, bool bFukllscreen);
@@ -31,11 +32,4 @@ void tn2d_graphics_draw_point(int iX, int iY, int iRed, int iGreen, int iBlue, i
 void tn2d_graphics_draw_line(int iX1, int iY1, int iX2, int iY2, int iRed, int iGreen, int iBlue, int iAlpha);
 void tn2d_graphics_draw_rect(const char *mode, int iX, int iY, int iWidth, int iHeight, int iRed, int iGreen, int iBlue, int iAlpha);
 
-// Fonts and text
-typedef struct {
-    TTF_Font *sdl_font;
-} tn2d_font;
-
-tn2d_font tn2d_graphics_new_font(const char *path, int iSize);
-tn2d_texture tn2d_graphics_new_text(tn2d_font font, const char *text, int iRed, int iGreen, int iBlue, int iAlpha);  
 #endif

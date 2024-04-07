@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "tn2d_graphics.h"
+#include "tn2d_ttf.h"
 
 #define SDL_ASSERT_LEVEL 2
 
@@ -163,42 +164,4 @@ void tn2d_graphics_draw_rect(const char *mode, int iX, int iY, int iWidth, int i
     else {
         printf("Mode %s not supported\n", mode);
     }
-
-    SDL_RenderDrawRect(tn2d_sdl_renderer, &rect);
-}
-
-tn2d_font tn2d_graphics_new_font(const char *path, int iSize) {
-    tn2d_font font = {NULL};
-    font.sdl_font = TTF_OpenFont(path, iSize);
-    if (font.sdl_font == NULL)
-    {
-        printf("Failed to load font! SDL_ttf Error: %s %s\n", path, TTF_GetError());
-    }
-    return font;
-}
-
-tn2d_texture tn2d_graphics_new_text(tn2d_font font, const char *text, int iRed, int iGreen, int iBlue, int iAlpha) {
-    SDL_Color color = {iRed, iGreen, iBlue, iAlpha};
-    SDL_Surface *surface = TTF_RenderText_Solid(font.sdl_font, text, color);
-    if (surface == NULL)
-    {
-        printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-        tn2d_texture texture = {NULL, 0, 0};
-        return texture;
-    }
-
-    tn2d_texture texture = {NULL, 0, 0};
-    texture.sdl_texture = SDL_CreateTextureFromSurface(tn2d_sdl_renderer, surface);
-    if (texture.sdl_texture == NULL)
-    {
-        printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
-    }
-    else
-    {
-        texture.width = surface->w;
-        texture.height = surface->h;
-    }
-
-    SDL_FreeSurface(surface);
-    return texture;
 }
