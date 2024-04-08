@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "tn2d/tn2d.h"
 #include "tn2d/tn2d_graphics.h"
 #include "tn2d/tn2d_ttf.h"
 
@@ -10,12 +11,13 @@ int main(int argc, char *argv[])
     setvbuf(stdout, NULL, _IONBF, 0);
     int iGameWidth = 800, iGameHeight = 864;
     tn2d_texture texFusee;
+
+    tn2d_init();
     tn2d_graphics_init("My first SDL2 test", iGameWidth, iGameHeight, false);
     tn2d_ttf_init();
 
     texFusee = tn2d_graphics_new_image("assets/images/fusee.png");
 
-    int iSpeed = 1;
     int iYpos = iGameHeight - texFusee.height;
 
     tn2d_font font = tn2d_ttf_new_font("assets/fonts/Bangers-Regular.ttf", 48);
@@ -32,13 +34,15 @@ int main(int argc, char *argv[])
             break;
         }
 
-        if (iYpos < 0) {
-            iSpeed = -iSpeed;
-        } else if (iYpos > iGameHeight - texFusee.height) {
-            iSpeed = -iSpeed;
+        if (tn2d_keyboard_key_pressed("Up")) {
+            if (iYpos > 0) {
+                iYpos += -1;
+            }
+        } else if (tn2d_keyboard_key_pressed("Down")) {
+            if (iYpos <= iGameHeight - texFusee.height) {
+                iYpos += 1;
+            }
         }
-        iYpos += iSpeed;
-
 
         // RENDER
         tn2d_graphics_draw_line(0, 0, iGameWidth, iGameHeight, 255, 0, 255, 255);

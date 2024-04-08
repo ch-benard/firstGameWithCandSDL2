@@ -5,7 +5,8 @@
 #include "SDL2/SDL_ttf.h"
 #include "tn2d_graphics.h"
 
-// Fonts and text
+extern const Uint8 *tn2d_ttf_key_state;
+
 typedef struct {
     TTF_Font *sdl_font;
 } tn2d_font;

@@ -48,13 +48,8 @@ int tn2d_graphics_init(char *stitle, int iWidth, int iHeight, bool bFukllscreen)
         }
     }
 
-    // if (TTF_Init() == -1)
-    // {
-    //     printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-    //     return -1;
-    // }
-
     SDL_SetRenderDrawBlendMode(tn2d_sdl_renderer, SDL_BLENDMODE_BLEND);
+    return 0;
 }
 
 void tn2d_graphics_close(void) {
