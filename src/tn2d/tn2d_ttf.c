@@ -3,6 +3,15 @@
 #include "SDL2/SDL_ttf.h"
 #include "tn2d_graphics.h"
 
+int tn2d_ttf_init() {
+    if (TTF_Init() == -1) {
+        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
 tn2d_font tn2d_ttf_new_font(const char *path, int iSize) {
     tn2d_font font = {NULL};
     font.sdl_font = TTF_OpenFont(path, iSize);

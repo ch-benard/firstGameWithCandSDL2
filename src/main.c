@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     int iGameWidth = 800, iGameHeight = 864;
     tn2d_texture texFusee;
     tn2d_graphics_init("My first SDL2 test", iGameWidth, iGameHeight, false);
+    tn2d_ttf_init();
 
     texFusee = tn2d_graphics_new_image("assets/images/fusee.png");
 

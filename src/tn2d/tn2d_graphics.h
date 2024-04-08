@@ -1,5 +1,5 @@
-#ifndef __tn2d_graphics_h__
-#define __tn2d_graphics_h__
+#ifndef __TN2D_GRAPHICS_H__
+#define __TN2D_GRAPHICS_H__
 
 #include <stdio.h>
 #include <stdbool.h>
