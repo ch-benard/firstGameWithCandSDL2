@@ -16,16 +16,26 @@ void tn2d_graphics_close(void);
 int tn2d_graphics_begin_draw(void);
 void tn2d_graphics_end_draw(void);
 
-// Image loading
+// Image
+
+typedef struct {
+    int x;
+    int y;
+    int width;
+    int height;
+} tn2d_graphics_rect;
+
 typedef struct {
     SDL_Texture *sdl_texture;
     int width;
     int height;
 } tn2d_texture;
+
 tn2d_texture tn2d_graphics_new_image(const char *path);
 void tn2d_graphics_free_image(tn2d_texture texture);
 float get_tn2d_fDeltaTime(void);
 void tn2d_graphics_draw_image(tn2d_texture texture, int iX, int iY);
+void tn2d_graphics_draw_quad(tn2d_texture texture, tn2d_graphics_rect rectSource, int iX, int iY);
 
 // Primitives
 void tn2d_graphics_color(int iRed, int iGreen, int iBlue, int iAlpha);
