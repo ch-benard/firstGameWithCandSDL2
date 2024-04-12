@@ -143,6 +143,26 @@ void tn2d_graphics_draw_image(tn2d_texture texture, int iX, int iY) {
     }
 }
 
+void tn2d_graphics_draw_quad(tn2d_texture texture, tn2d_graphics_rect source, int iX, int iY) {
+    SDL_Rect rectSource;
+    rectSource.x = source.x;
+    rectSource.y = source.y;
+    rectSource.w = source.width;
+    rectSource.h = source.height;
+
+    SDL_Rect dest;
+    dest.x = iX;
+    dest.y = iY;
+    dest.w = rectSource.w;
+    dest.h = rectSource.h;
+    int iresult = SDL_RenderCopy(tn2d_sdl_renderer, texture.sdl_texture, &rectSource, &dest);
+    if (iresult != 0)
+    {
+        printf("Unable to draw texture! SDL Error: %s\n", SDL_GetError());
+        return;
+    }
+}
+
 // Primitives
 void tn2d_graphics_color(int iRed, int iGreen, int iBlue, int iAlpha) {
     SDL_SetRenderDrawColor(tn2d_sdl_renderer, iRed, iGreen, iBlue, iAlpha);
