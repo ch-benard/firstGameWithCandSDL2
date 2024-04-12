@@ -5,6 +5,8 @@
 
 SDL_Window *tn2d_sdl_window;
 SDL_Renderer *tn2d_sdl_renderer;
+float tn2d_fDeltaTime = 0.0f;
+Uint32 _tn2d_iTicksLastFrame;
  
 int tn2d_graphics_init(char *stitle, int iWidth, int iHeight, bool bFukllscreen) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -49,6 +51,7 @@ int tn2d_graphics_init(char *stitle, int iWidth, int iHeight, bool bFukllscreen)
     }
 
     SDL_SetRenderDrawBlendMode(tn2d_sdl_renderer, SDL_BLENDMODE_BLEND);
+
     return 0;
 }
 
@@ -60,6 +63,9 @@ void tn2d_graphics_close(void) {
 }
 
 int tn2d_graphics_begin_draw(void) {
+    Uint32 iTicksThisFrame = SDL_GetTicks();
+    tn2d_fDeltaTime = (iTicksThisFrame - _tn2d_iTicksLastFrame) / 1000.0f;
+    _tn2d_iTicksLastFrame = iTicksThisFrame;
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -75,6 +81,13 @@ int tn2d_graphics_begin_draw(void) {
 
 void tn2d_graphics_end_draw(void) {
     SDL_RenderPresent(tn2d_sdl_renderer);
+
+    // Cap the frame rate
+    int iTimeToWait = 16 - (SDL_GetTicks() - _tn2d_iTicksLastFrame);
+    if (iTimeToWait > 0 && iTimeToWait <= 16)
+    {
+        SDL_Delay(iTimeToWait);
+    }
 }
 
 /* Fonction qui envoit une texture */
@@ -110,6 +123,10 @@ void tn2d_graphics_free_image(tn2d_texture texture) {
         SDL_DestroyTexture(texture.sdl_texture);
         texture.sdl_texture = NULL;
     }
+}
+
+float get_tn2d_fDeltaTime() {
+    return tn2d_fDeltaTime;
 }
 
 void tn2d_graphics_draw_image(tn2d_texture texture, int iX, int iY) {

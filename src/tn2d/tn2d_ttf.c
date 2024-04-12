@@ -47,3 +47,10 @@ tn2d_texture tn2d_ttf_new_text(tn2d_font font, const char *text, int iRed, int i
     SDL_FreeSurface(surface);
     return texture;
 }
+
+void tn2d_ttf_free_font (tn2d_font font) {
+    if (font.sdl_font != NULL) {
+        TTF_CloseFont(font.sdl_font);
+        font.sdl_font = NULL;
+    }
+}

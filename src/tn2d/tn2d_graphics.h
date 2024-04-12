@@ -24,6 +24,7 @@ typedef struct {
 } tn2d_texture;
 tn2d_texture tn2d_graphics_new_image(const char *path);
 void tn2d_graphics_free_image(tn2d_texture texture);
+float get_tn2d_fDeltaTime(void);
 void tn2d_graphics_draw_image(tn2d_texture texture, int iX, int iY);
 
 // Primitives
