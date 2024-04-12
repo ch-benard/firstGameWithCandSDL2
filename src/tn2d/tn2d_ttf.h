@@ -14,5 +14,6 @@ typedef struct {
 int tn2d_ttf_init();
 tn2d_font tn2d_ttf_new_font(const char *path, int iSize);
 tn2d_texture tn2d_ttf_new_text(tn2d_font font, const char *text, int iRed, int iGreen, int iBlue, int iAlpha);
+void tn2d_ttf_free_font (tn2d_font font);
 
 #endif

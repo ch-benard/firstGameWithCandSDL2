@@ -17,11 +17,10 @@ int main(int argc, char *argv[])
     tn2d_ttf_init();
 
     texFusee = tn2d_graphics_new_image("assets/images/fusee.png");
-
     int iYpos = iGameHeight - texFusee.height;
-
     tn2d_font font = tn2d_ttf_new_font("assets/fonts/Bangers-Regular.ttf", 48);
     tn2d_texture texText = tn2d_ttf_new_text(font, "Hey SpaceX, look how precise my landing is !", 255, 255, 255, 125);
+    tn2d_texture textDeltatime;
 
     // GAME LOOP
     while (true) {
@@ -51,9 +50,18 @@ int main(int argc, char *argv[])
         tn2d_graphics_draw_image(texFusee, 0, iYpos);
         tn2d_graphics_draw_image(texText, 10, 10);
 
+        char sDeltatime[50];
+        sprintf(sDeltatime, "Deltatime: %.2f", get_tn2d_fDeltaTime());
+        textDeltatime = tn2d_ttf_new_text(font, sDeltatime, 255, 255, 255, 255);
+        tn2d_graphics_draw_image(textDeltatime, 10, 100);
+
+
         tn2d_graphics_end_draw();
     }
     tn2d_graphics_free_image(texFusee);
+    tn2d_graphics_free_image(texText);
+    tn2d_graphics_free_image(textDeltatime);
+    tn2d_ttf_free_font(font);
     tn2d_graphics_close();
     return 0;
 }
