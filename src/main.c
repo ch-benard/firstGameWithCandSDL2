@@ -1,49 +1,59 @@
 #include <stdio.h>
-#include<SDL2/SDL.h>
-#include<stdbool.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-int main() {
-    printf("Hello, World!\n");
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
-        return 1;
-    }
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window *window = SDL_CreateWindow(
-        "Hello World!", 
-        SDL_WINDOWPOS_UNDEFINED, 
-        SDL_WINDOWPOS_UNDEFINED, 
-        640, 480, 
-        SDL_WINDOW_SHOWN
-    );
-    if (window == NULL) {
-        fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
-        return -1;
-    }
-   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+#include "tn2d/tn2d.h"
+#include "tn2d/tn2d_graphics.h"
+#include "tn2d/tn2d_ttf.h"
 
-    if (renderer == NULL) {
-        fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
-        return -1;
-    }
+int main(int argc, char *argv[])
+{
+    setvbuf(stdout, NULL, _IONBF, 0);
+    int iGameWidth = 800, iGameHeight = 864;
+    tn2d_texture texFusee;
 
+    tn2d_init();
+    tn2d_graphics_init("My first SDL2 test", iGameWidth, iGameHeight, false);
+    tn2d_ttf_init();
+
+    texFusee = tn2d_graphics_new_image("assets/images/fusee.png");
+
+    int iYpos = iGameHeight - texFusee.height;
+
+    tn2d_font font = tn2d_ttf_new_font("assets/fonts/Bangers-Regular.ttf", 48);
+    tn2d_texture texText = tn2d_ttf_new_text(font, "Hey SpaceX, look how precise my landing is !", 255, 255, 255, 125);
+
+    // GAME LOOP
     while (true) {
-        SDL_Event event;
-        if (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                break;
+        // INIT
+
+
+        // UPDATE
+        tn2d_graphics_color(0, 0, 0, 0);
+        if (tn2d_graphics_begin_draw() == 0) {
+            break;
+        }
+
+        if (tn2d_keyboard_key_pressed("Up")) {
+            if (iYpos > 0) {
+                iYpos += -1;
+            }
+        } else if (tn2d_keyboard_key_pressed("Down")) {
+            if (iYpos <= iGameHeight - texFusee.height) {
+                iYpos += 1;
             }
         }
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderDrawLine(renderer, 320, 200, 300, 240);
-        SDL_RenderDrawLine(renderer, 300, 240, 340, 240);
-        SDL_RenderDrawLine(renderer, 340, 240, 320, 200);
-        SDL_RenderPresent(renderer);
+
+        // RENDER
+        tn2d_graphics_draw_line(0, 0, iGameWidth, iGameHeight, 255, 0, 255, 255);
+        tn2d_graphics_draw_rect("fill", 100, 100, 200, 200, 255, 0, 0, 100);
+        tn2d_graphics_draw_rect("fill", 130, 130, 200, 200, 0, 0, 255, 100);
+        tn2d_graphics_draw_image(texFusee, 0, iYpos);
+        tn2d_graphics_draw_image(texText, 10, 10);
+
+        tn2d_graphics_end_draw();
     }
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    tn2d_graphics_free_image(texFusee);
+    tn2d_graphics_close();
     return 0;
 }
