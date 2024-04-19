@@ -9,10 +9,10 @@ typedef struct tn2d_sdlkey {
     SDL_Scancode sdl_scancode;
 } tn2d_sdlkey;
 
-extern const Uint8 *_tn2d_ttf_key_state;
+extern const Uint8 *tn2d_ttf_key_state;
 
-void _tn2d_keyboard_init(void);
+void TN2D_keyboardInit(void);
 
-bool tn2d_keyboard_key_pressed(const char *key);
+bool TN2D_keyPress(const char *key);
 
 #endif

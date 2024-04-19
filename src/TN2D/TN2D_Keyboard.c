@@ -1,7 +1,8 @@
+#include <stdio.h>
 #include "SDL2/SDL.h"
-#include "tn2d_keyboard.h"
+#include "TN2D_Keyboard.h"
 
-tn2d_sdlkey _tn2d_keymap[] = {
+tn2d_sdlkey tn2d_keymap[] = {
     {"a", SDL_SCANCODE_A},
     {"b", SDL_SCANCODE_B},
     {"c", SDL_SCANCODE_C},
@@ -61,26 +62,26 @@ tn2d_sdlkey _tn2d_keymap[] = {
     {"Up", SDL_SCANCODE_UP}
 };
 
-const Uint8 *_tn2d_ttf_key_state = NULL;
+const Uint8 *tn2d_ttf_key_state = NULL;
 
-tn2d_sdlkey *_tn2d_keyboard_get_key(const char *key) {
-    size_t num_items = sizeof(_tn2d_keymap) / sizeof(tn2d_sdlkey);
+tn2d_sdlkey *TN2D_getKey(const char *key) {
+    size_t num_items = sizeof(tn2d_keymap) / sizeof(tn2d_sdlkey);
     for (size_t i = 0; i < num_items; i++) {
-        if (strcmp(_tn2d_keymap[i].key, key) == 0) {
-            return &_tn2d_keymap[i];
+        if (strcmp(tn2d_keymap[i].key, key) == 0) {
+            return &tn2d_keymap[i];
         }
     }
     return NULL;
 }
 
-void _tn2d_keyboard_init(void) {
-    _tn2d_ttf_key_state = SDL_GetKeyboardState(NULL);
+void TN2D_keyboardInit(void) {
+    tn2d_ttf_key_state = SDL_GetKeyboardState(NULL);
 }
 
-bool tn2d_keyboard_key_pressed(const char *key) {
-    tn2d_sdlkey *sdlkey = _tn2d_keyboard_get_key(key);
+bool TN2D_keyPress(const char *key) {
+    tn2d_sdlkey *sdlkey = TN2D_getKey(key);
     if (sdlkey) {
-        return _tn2d_ttf_key_state[sdlkey->sdl_scancode];
+        return tn2d_ttf_key_state[sdlkey->sdl_scancode];
     }
     return NULL;
 }

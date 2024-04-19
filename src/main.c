@@ -2,41 +2,44 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "tn2d/tn2d.h"
-#include "tn2d/tn2d_graphics.h"
-#include "tn2d/tn2d_ttf.h"
+#include "TN2D/TN2D.h"
+#include "TN2D/TN2D_Graphics.h"
+#include "TN2D/TN2D_Ttf.h"
 #include "game.h"
+#include "constants.h"
 
 int main(int argc, char *argv[])
 {
-    setvbuf(stdout, NULL, _IONBF, 0);
-    int iGameWidth = 1024, iGameHeight = 824;
+    // setvbuf(stdout, NULL, _IONBF, 0);
+    // INIT TN2D
+    if (TN2D_Init() == FALSE) {
+        printf("Failed to initialize TN2D!\n");
+        return 1;
+    };
 
-    tn2d_init();
-    tn2d_graphics_init("Shaolin Quest", iGameWidth, iGameHeight, false);
-    tn2d_ttf_init();
-
-    // INIT
-    game_init();
+    // INIT GAME
+    gameInit();
 
     // GAME LOOP
-    while (true) {
+    while (TRUE) {
 
-        // UPDATE
-        tn2d_graphics_color(0, 0, 0, 0);
-        if (tn2d_graphics_begin_draw() == 0) {
+        TN2D_setColor(0, 0, 0, 0);
+        if (TN2D_beginDraw() == 0) {
             break;
         }
 
-        game_update(get_tn2d_fDeltaTime());
-        game_render();
+        // UPDATE GAME
+        // gameUpdate();
 
-        // RENDER
-        tn2d_graphics_end_draw();
+        // RENDER GAME
+        gameRender();
+
+        // END
+        TN2D_endDraw();
     }
 
-    game_close();
-    tn2d_graphics_close();
+    gameClose();
+    TN2D_Close();
 
     return 0;
 }

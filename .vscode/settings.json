@@ -1,6 +1,6 @@
 {
     "files.associations": {
-        "tn2d_graphics.h": "c",
+        "TN2D_Graphics.h": "c",
         "sdl_ttf.h": "c"
     }
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "tn2d_graphics.h"
+#include "TN2D_Graphics.h"
+#include ".././constants.h"
 
 #define SDL_ASSERT_LEVEL 2
 
@@ -8,32 +9,28 @@ SDL_Renderer *tn2d_sdl_renderer;
 float tn2d_fDeltaTime = 0.0f;
 Uint32 _tn2d_iTicksLastFrame;
  
-int tn2d_graphics_init(char *stitle, int iWidth, int iHeight, bool bFukllscreen) {
+int TN2D_graphicsInit(char *stitle, int iWidth, int iHeight, int iScreenMode) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        printf("Failed to initialise SDL\n");
-        return -1;
+        fprintf(stderr, "Failed to initialise SDL: %s\n", SDL_GetError());
+        return false;
     }
 
-    Uint32 iFlags = SDL_WINDOW_SHOWN;
-    if (bFukllscreen)
-    {
-        iFlags |= SDL_WINDOW_FULLSCREEN;
-    }
-
+    // Try to create the game window
     tn2d_sdl_window = SDL_CreateWindow( stitle,
-                                        SDL_WINDOWPOS_UNDEFINED,
-                                        SDL_WINDOWPOS_UNDEFINED,
+                                        SDL_WINDOWPOS_CENTERED,
+                                        SDL_WINDOWPOS_CENTERED,
                                         iWidth,
                                         iHeight,
-                                        iFlags);
+                                        iScreenMode);
 
     if (tn2d_sdl_window == NULL)
     {
-        SDL_Log("Could not create a window: %s", SDL_GetError());
+        fprintf(stderr, "Could not create a window: %s", SDL_GetError());
         return -1;
     }
 
+    // Try to create renderer
     tn2d_sdl_renderer = SDL_CreateRenderer(tn2d_sdl_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (tn2d_sdl_renderer == NULL)
     {
@@ -52,17 +49,17 @@ int tn2d_graphics_init(char *stitle, int iWidth, int iHeight, bool bFukllscreen)
 
     SDL_SetRenderDrawBlendMode(tn2d_sdl_renderer, SDL_BLENDMODE_BLEND);
 
-    return 0;
+    return TRUE;
 }
 
-void tn2d_graphics_close(void) {
+void TN2D_graphicsClose(void) {
     SDL_DestroyRenderer(tn2d_sdl_renderer);
     SDL_DestroyWindow(tn2d_sdl_window);
     IMG_Quit();
     SDL_Quit();
 }
 
-int tn2d_graphics_begin_draw(void) {
+int TN2D_beginDraw(void) {
     Uint32 iTicksThisFrame = SDL_GetTicks();
     tn2d_fDeltaTime = (iTicksThisFrame - _tn2d_iTicksLastFrame) / 1000.0f;
     _tn2d_iTicksLastFrame = iTicksThisFrame;
@@ -79,7 +76,7 @@ int tn2d_graphics_begin_draw(void) {
     return 1;
 }
 
-void tn2d_graphics_end_draw(void) {
+void TN2D_endDraw(void) {
     SDL_RenderPresent(tn2d_sdl_renderer);
 
     // Cap the frame rate
@@ -106,7 +103,7 @@ SDL_Texture *LoadTexture(SDL_Renderer *renderer, const char *path)
 }
 
 
-tn2d_texture tn2d_graphics_new_image(const char *path) {
+tn2d_texture TN2D_newImage(const char *path) {
     tn2d_texture texture;
     texture.sdl_texture = LoadTexture(tn2d_sdl_renderer, path);
     if (texture.sdl_texture == NULL)
@@ -118,18 +115,14 @@ tn2d_texture tn2d_graphics_new_image(const char *path) {
     return texture;
 }
 
-void tn2d_graphics_free_image(tn2d_texture texture) {
+void TN2D_freeImage(tn2d_texture texture) {
     if(texture.sdl_texture != NULL) {
         SDL_DestroyTexture(texture.sdl_texture);
         texture.sdl_texture = NULL;
     }
 }
 
-float get_tn2d_fDeltaTime() {
-    return tn2d_fDeltaTime;
-}
-
-void tn2d_graphics_draw_image(tn2d_texture texture, int iX, int iY) {
+void TN2D_drawImage(tn2d_texture texture, int iX, int iY) {
     SDL_Rect dest;
     dest.x = iX;
     dest.y = iY;
@@ -143,7 +136,7 @@ void tn2d_graphics_draw_image(tn2d_texture texture, int iX, int iY) {
     }
 }
 
-void tn2d_graphics_draw_quad(tn2d_texture texture, tn2d_graphics_rect source, int iX, int iY) {
+void TN2D_drawSpriteFromSheet(tn2d_texture texture, TN2D_Graphics_rect source, int iX, int iY) {
     SDL_Rect rectSource;
     rectSource.x = source.x;
     rectSource.y = source.y;
@@ -164,22 +157,22 @@ void tn2d_graphics_draw_quad(tn2d_texture texture, tn2d_graphics_rect source, in
 }
 
 // Primitives
-void tn2d_graphics_color(int iRed, int iGreen, int iBlue, int iAlpha) {
+void TN2D_setColor(int iRed, int iGreen, int iBlue, int iAlpha) {
     SDL_SetRenderDrawColor(tn2d_sdl_renderer, iRed, iGreen, iBlue, iAlpha);
 }
 
-void tn2d_graphics_draw_point(int iX, int iY, int iRed, int iGreen, int iBlue, int iAlpha) {
-    tn2d_graphics_color(iRed, iGreen, iBlue, iAlpha);
+void TN2D_drawPoint(int iX, int iY, int iRed, int iGreen, int iBlue, int iAlpha) {
+    TN2D_setColor(iRed, iGreen, iBlue, iAlpha);
     SDL_RenderDrawPoint(tn2d_sdl_renderer, iX, iY);
 }
 
-void tn2d_graphics_draw_line(int iX1, int iY1, int iX2, int iY2, int iRed, int iGreen, int iBlue, int iAlpha) {
-    tn2d_graphics_color(iRed, iGreen, iBlue, iAlpha);
+void TN2D_drawLine(int iX1, int iY1, int iX2, int iY2, int iRed, int iGreen, int iBlue, int iAlpha) {
+    TN2D_setColor(iRed, iGreen, iBlue, iAlpha);
     SDL_RenderDrawLine(tn2d_sdl_renderer, iX1, iY1, iX2, iY2);
 }
 
-void tn2d_graphics_draw_rect(const char *mode, int iX, int iY, int iWidth, int iHeight, int iRed, int iGreen, int iBlue, int iAlpha) {
-    tn2d_graphics_color(iRed, iGreen, iBlue, iAlpha);
+void TN2D_drawRectangle(const char *mode, int iX, int iY, int iWidth, int iHeight, int iRed, int iGreen, int iBlue, int iAlpha) {
+    TN2D_setColor(iRed, iGreen, iBlue, iAlpha);
     SDL_Rect rect;
     rect.x = iX;
     rect.y = iY;
